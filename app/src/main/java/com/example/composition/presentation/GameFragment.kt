@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.composition.R
 import com.example.composition.databinding.FragmentGameBinding
 import com.example.composition.domain.entity.GameResult
@@ -13,6 +14,7 @@ import com.example.composition.domain.entity.GameSettings
 import com.example.composition.domain.entity.Level
 
 class GameFragment : Fragment() {
+    private lateinit var viewModel: GameViewModel
     private lateinit var level: Level
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
@@ -34,14 +36,20 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+        viewModel.gameStart(level)  // генерирует вопрос
+        setOptionsForQuestion()     // устанавливаем варианты ответов
+        observeViewModel()          // Закрываем экран
+
         binding.tvOption1.setOnClickListener {
+            viewModel.checkAnswer(viewModel.question.options[0])
+        }
+    }
+
+    private fun observeViewModel() {
+        viewModel.gameOver.observe(viewLifecycleOwner){
             launchGameFinishedFragment(
-                GameResult(
-                    true,
-                    100,
-                    100,
-                    GameSettings(1, 1, 1, 1)
-                )
+                viewModel.gameResult
             )
         }
     }
