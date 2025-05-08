@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.composition.R
 import com.example.composition.databinding.FragmentGameBinding
 import com.example.composition.domain.entity.GameResult
-import com.example.composition.domain.entity.GameSettings
 import com.example.composition.domain.entity.Level
 
 class GameFragment : Fragment() {
@@ -37,20 +36,66 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[GameViewModel::class.java]
-        viewModel.gameStart(level)  // генерирует вопрос
-        setOptionsForQuestion()     // устанавливаем варианты ответов
-        observeViewModel()          // Закрываем экран
+        viewModel.createQuestion(level)  // генерирует вопрос
+        setupBinding()
+        observeViewModel()
+        viewModel.startTimer(level)
+        setupListeners()
+    }
 
-        binding.tvOption1.setOnClickListener {
-            viewModel.checkAnswer(viewModel.question.options[0])
+    private fun setupListeners() {
+        with(binding){
+            tvOption1.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[0])
+            }
+            tvOption2.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[1])
+            }
+            tvOption3.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[2])
+            }
+            tvOption4.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[3])
+            }
+            tvOption5.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[4])
+            }
+            tvOption6.setOnClickListener {
+                viewModel.checkAnswer(viewModel.question.options[5])
+            }
+        }
+    }
+
+    private fun setupBinding() {
+        val viewOptions = listOf(binding.tvOption1, binding.tvOption2, binding.tvOption3, binding.tvOption4, binding.tvOption5, binding.tvOption6)
+        with(binding){
+            tvAnswersProgress.text = "Правильных ответов ${viewModel.countOfRightAnswers} (минимум ${viewModel.getGameSettings(level).minCountOfRightAnswers})"
+            tvSum.text = "${viewModel.question.sum}"
+            tvLeftNumber.text = "${viewModel.question.visibleNumber}"
+        }
+        for(n in 0 until viewModel.question.options.size) {
+            viewOptions[n].text = viewModel.question.options[n].toString()
         }
     }
 
     private fun observeViewModel() {
-        viewModel.gameOver.observe(viewLifecycleOwner){
-            launchGameFinishedFragment(
-                viewModel.gameResult
-            )
+        with(viewModel){
+            gameOver.observe(viewLifecycleOwner){
+                launchGameFinishedFragment(viewModel.gameOver(level))
+            }
+            newQuestion.observe(viewLifecycleOwner){
+                viewModel.createQuestion(level)
+                setupBinding()
+            }
+            toastMessage.observe(viewLifecycleOwner){ message ->
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+            gameTimeLeft.observe(viewLifecycleOwner) { time ->
+                binding.tvTimer.text = if(time.toInt() > 9) "00:$time" else "00:0$time"
+            }
+            progressBar.observe(viewLifecycleOwner) { count ->
+                binding.progressBar.setProgress(count, true)
+            }
         }
     }
 
