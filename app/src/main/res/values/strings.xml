@@ -16,7 +16,7 @@
     <string name="Normal">Средний</string>
     <string name="hard">Тяжелый</string>
     <string name="question">\?</string>
-    <string name="tv_progress">Правильных ответов %s (минимум %s)</string>
+    <string name="tv_progress">Правильных ответов %d (минимум %d)</string>
     <string name="game_over">Game Over</string>
     <string name="require_text">Необходимо количество правильных ответов: %s</string>
     <string name="your_score">Ваш счёт: %s</string>
