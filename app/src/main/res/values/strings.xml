@@ -16,11 +16,12 @@
     <string name="Normal">Средний</string>
     <string name="hard">Тяжелый</string>
     <string name="question">\?</string>
-    <string name="tv_progress">Правильных ответов %d (минимум %d)</string>
     <string name="game_over">Game Over</string>
-    <string name="require_text">Необходимо количество правильных ответов: %s</string>
-    <string name="your_score">Ваш счёт: %s</string>
-    <string name="tv_persentage">Процент правильных ответов: %s</string>
+    <string name="your_score">Ваш счёт: %d</string>
     <string name="button_retry">Попробовать снова</string>
-    <string name="tv_required_persentage">Необходимый процент правильных ответов: %s</string>
+
+    <string name="tv_required_persentage">Необходимый процент правильных ответов: %d</string>
+    <string name="tv_progress">Правильных ответов %d (минимум %d)</string>
+    <string name="tv_percentage_right_answers">Процент правильных ответов: %d</string>
+    <string name="require_count_answers">Необходимо количество правильных ответов: %d</string>
 </resources>
